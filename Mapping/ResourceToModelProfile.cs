@@ -4,11 +4,11 @@ using Market.Api.Resources;
 
 namespace Market.Api.Mapping
 {
-    public class ModelToResourceProfile : Profile
+    public class ResourceToModelProfile : Profile
     {
-        public ModelToResourceProfile()
+        public ResourceToModelProfile()
         {
-            CreateMap<Category, CategoryResourceGet>();
+            CreateMap<CategoryResourcePost, Category>();
         }
     }
 }

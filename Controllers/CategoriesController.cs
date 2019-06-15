@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Market.Api.Domain.Models;
 using Market.Api.Domain.Services;
+using Market.Api.Extensions;
 using Market.Api.Resources;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -23,10 +24,28 @@ namespace Market.Api.Controllers
 
 
         [HttpGet]
-        public async Task<IEnumerable<CategoryResource>> GetAllAsync()
+        public async Task<IEnumerable<CategoryResourceGet>> GetAllAsync()
         {
             var categories = await _categoryService.ListAsync();
-            return _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryResource>>(categories);
+            return _mapper.Map<IEnumerable<Category>, IEnumerable<CategoryResourceGet>>(categories);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostAsync([FromBody] CategoryResourcePost resource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState.GetErrorMessages());
+            }
+
+            var category = _mapper.Map<CategoryResourcePost, Category>(resource);
+            var result = await _categoryService.SaveAsync(category);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var categoryResource = _mapper.Map<Category, CategoryResourceGet>(result.Category);
+            return Ok(categoryResource);
         }
     }
 }
