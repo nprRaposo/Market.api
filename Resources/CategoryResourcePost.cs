@@ -2,7 +2,7 @@
 
 namespace Market.Api.Resources
 {
-    public class CategoryResourcePost
+    public class CategoryResourceSave
     {
         [Required]
         [MaxLength(30)]

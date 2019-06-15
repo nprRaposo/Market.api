@@ -8,7 +8,7 @@ namespace Market.Api.Mapping
     {
         public ResourceToModelProfile()
         {
-            CreateMap<CategoryResourcePost, Category>();
+            CreateMap<CategoryResourceSave, Category>();
         }
     }
 }
