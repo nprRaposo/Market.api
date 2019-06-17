@@ -11,10 +11,10 @@ namespace Market.Api.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IRepository<Category> _categoryRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryService(ICategoryRepository categoryRepository, IUnitOfWork unitOfWork)
+        public CategoryService(IRepository<Category> categoryRepository, IUnitOfWork unitOfWork)
         {
             this._categoryRepository = categoryRepository;
             _unitOfWork = unitOfWork;
@@ -22,7 +22,7 @@ namespace Market.Api.Services
 
         public async Task<IEnumerable<Category>> ListAsync()
         {
-            return await _categoryRepository.ListAsync();
+            return await _categoryRepository.Get();
         }
 
         public async Task<CategoryResponse> SaveAsync(Category category)
@@ -43,7 +43,7 @@ namespace Market.Api.Services
 
         public async Task<CategoryResponse> UpdateAsync(int id, Category category)
         {
-            var existingCategory = await _categoryRepository.FindByIdAsync(id);
+            var existingCategory = await _categoryRepository.GetById(id);
 
             if (existingCategory == null)
                 return new CategoryResponse("Category not found.");
@@ -65,14 +65,14 @@ namespace Market.Api.Services
 
         public async Task<CategoryResponse> DeleteAsync(int id)
         {
-            var existingCategory = await _categoryRepository.FindByIdAsync(id);
+            var existingCategory = await _categoryRepository.GetById(id);
 
             if (existingCategory == null)
                 return new CategoryResponse("Category not found.");
 
             try
             {
-                _categoryRepository.Remove(existingCategory);
+                _categoryRepository.Remove(id);
                 await _unitOfWork.CompleteAsync();
 
                 return new CategoryResponse(existingCategory);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Market.Api.Domain.Models;
 using Market.Api.Domain.Repositories;
 using Market.Api.Domain.Services;
 using Market.Api.Persistence.Contexts;
@@ -32,7 +33,7 @@ namespace Market.Api
                 options.UseInMemoryDatabase("supermarket-api-in-memory");
             });
 
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IRepository<Category>, Repository<Category>>();
             services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddScoped<ICategoryService, CategoryService>();

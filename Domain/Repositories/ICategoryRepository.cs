@@ -2,20 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Market.Api.Domain.Repositories
 {
-    public interface ICategoryRepository
+    public interface IRepository <T> 
     {
-        Task<IEnumerable<Category>> ListAsync();
+        Task<IEnumerable<T>> Get(
+            Expression<Func<T, bool>> filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
+            string[] includeProperties = null);
 
-        Task AddAsync(Category category);
+        Task AddAsync(T entity);
 
-        Task<Category> FindByIdAsync(int id);
+        Task<T> GetById(int id);
 
-        void Update(Category category);
+        void Update(T entity);
 
-        void Remove(Category category);
+        void Remove(int id);
     }
 }
