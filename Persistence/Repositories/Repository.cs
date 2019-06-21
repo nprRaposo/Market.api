@@ -9,19 +9,21 @@ using System.Threading.Tasks;
 
 namespace Market.Api.Persistence.Repositories
 {
-    public class Repository <T>: BaseRepository, IRepository<T> where T: class
+    public class Repository <T>: IRepository<T> where T: class
     {
         internal DbSet<T> _dbSet;
+        protected readonly AppDbContext _context;
 
-        public Repository(AppDbContext context) : base(context)
+        public Repository(AppDbContext context)
         {
             this._dbSet = context.Set<T>();
+            this._context = context;
         }
 
         public virtual async Task<IEnumerable<T>> Get(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            string [] includeProperties = null)
+            IEnumerable<string> includeProperties = null)
         {
             IQueryable<T> query = this._dbSet;
 

@@ -5,20 +5,25 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Market.Api.Persistence.Repositories
 {
-    public class ProductRepository : BaseRepository, IProductRepository
+    public class ProductRepository : Repository<Product>
     {
         public ProductRepository(AppDbContext context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<Product>> ListAsync()
+        public override async Task<IEnumerable<Product>> Get(
+            Expression<Func<Product, bool>> filter = null,
+            Func<IQueryable<Product>, IOrderedQueryable<Product>> orderBy = null,
+            IEnumerable<string> includeProperties = null)
         {
-            return await _context.Products.Include(p => p.Category)
-                                          .ToListAsync();
+            var props = includeProperties == null ? new List<string> { "Category" } : includeProperties.Append("Category");
+
+            return await base.Get(filter, orderBy, props);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Market.Api
             });
 
             services.AddScoped<IRepository<Category>, Repository<Category>>();
-            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IRepository<Product>, ProductRepository>();
 
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();

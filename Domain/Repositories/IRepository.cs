@@ -12,7 +12,7 @@ namespace Market.Api.Domain.Repositories
         Task<IEnumerable<T>> Get(
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
-            string[] includeProperties = null);
+            IEnumerable<string> includeProperties = null);
 
         Task AddAsync(T entity);
 

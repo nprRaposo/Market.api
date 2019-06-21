@@ -10,16 +10,16 @@ namespace Market.Api.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IRepository<Product> _productRepository;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IRepository<Product> productRepository)
         {
             _productRepository = productRepository;
         }
 
         public async Task<IEnumerable<Product>> ListAsync()
         {
-            return await _productRepository.ListAsync();
+            return await _productRepository.Get(null, null, new List<string> {"Category"});
         }
     }
 }
