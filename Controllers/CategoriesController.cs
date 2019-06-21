@@ -13,10 +13,10 @@ namespace Market.Api.Controllers
     [Route("/api/[controller]")]
     public class CategoriesController : Controller
     {
-        private readonly ICategoryService _categoryService;
+        private readonly IService<Category> _categoryService;
         private readonly IMapper _mapper;
 
-        public CategoriesController(ICategoryService categoryService, IMapper mapper)
+        public CategoriesController(IService<Category> categoryService, IMapper mapper)
         {
             _categoryService = categoryService;
             _mapper = mapper;
@@ -44,7 +44,7 @@ namespace Market.Api.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var categoryResource = _mapper.Map<Category, CategoryResourceGet>(result.Category);
+            var categoryResource = _mapper.Map<Category, CategoryResourceGet>(result.Entity);
             return Ok(categoryResource);
         }
 
@@ -60,7 +60,7 @@ namespace Market.Api.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var categoryResource = _mapper.Map<Category, CategoryResourceGet>(result.Category);
+            var categoryResource = _mapper.Map<Category, CategoryResourceGet>(result.Entity);
             return Ok(categoryResource);
         }
 
@@ -72,7 +72,7 @@ namespace Market.Api.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var categoryResource = _mapper.Map<Category, CategoryResourceGet>(result.Category);
+            var categoryResource = _mapper.Map<Category, CategoryResourceGet>(result.Entity);
             return Ok(categoryResource);
         }
     }

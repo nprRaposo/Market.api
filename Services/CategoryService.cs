@@ -1,86 +1,82 @@
-﻿using Market.Api.Domain.Models;
-using Market.Api.Domain.Repositories;
+﻿using Market.Api.Domain.Repositories;
 using Market.Api.Domain.Services;
 using Market.Api.Domain.Services.Communication;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Market.Api.Services
 {
-    public class CategoryService : ICategoryService
+    public class BaseService<T> : IService<T> where T: class
     {
-        private readonly IRepository<Category> _categoryRepository;
+        private readonly IRepository<T> _entityRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CategoryService(IRepository<Category> categoryRepository, IUnitOfWork unitOfWork)
+        public BaseService(IRepository<T> entityRepository, IUnitOfWork unitOfWork)
         {
-            this._categoryRepository = categoryRepository;
+            this._entityRepository = entityRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Category>> ListAsync()
+        public async Task<IEnumerable<T>> ListAsync()
         {
-            return await _categoryRepository.Get();
+            return await _entityRepository.Get();
         }
 
-        public async Task<CategoryResponse> SaveAsync(Category category)
+        public async Task<ActionResponse<T>> SaveAsync(T entity)
         {
             try
             {
-                await _categoryRepository.AddAsync(category);
+                await _entityRepository.AddAsync(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return new CategoryResponse(category);
+                return new ActionResponse<T>(entity);
             }
             catch (Exception ex)
             {
                 // Do some logging stuff
-                return new CategoryResponse($"An error occurred when saving the category: {ex.Message}");
+                return new ActionResponse<T>($"An error occurred when saving the entity: {ex.Message}");
             }
         }
 
-        public async Task<CategoryResponse> UpdateAsync(int id, Category category)
+        public async Task<ActionResponse<T>> UpdateAsync(int id, T entity)
         {
-            var existingCategory = await _categoryRepository.GetById(id);
+            var existingEntity = await _entityRepository.GetById(id);
 
-            if (existingCategory == null)
-                return new CategoryResponse("Category not found.");
-
-            existingCategory.Name = category.Name;
+            if (existingEntity == null)
+                return new ActionResponse<T>("Entity not found.");
 
             try
             {
-                _categoryRepository.Update(existingCategory);
+                _entityRepository.Update(entity);
                 await _unitOfWork.CompleteAsync();
 
-                return new CategoryResponse(existingCategory);
+                return new ActionResponse<T>(existingEntity);
             }
             catch (Exception ex)
             {
-                return new CategoryResponse($"An error occurred when updating the category: {ex.Message}");
+                return new ActionResponse<T>($"An error occurred when updating the entity: {ex.Message}");
             }
         }
 
-        public async Task<CategoryResponse> DeleteAsync(int id)
+        public async Task<ActionResponse<T>> DeleteAsync(int id)
         {
-            var existingCategory = await _categoryRepository.GetById(id);
+            var existingEntity = await _entityRepository.GetById(id);
 
-            if (existingCategory == null)
-                return new CategoryResponse("Category not found.");
+            if (existingEntity == null)
+                return new ActionResponse<T>("Entity not found.");
 
             try
             {
-                _categoryRepository.Remove(id);
+                _entityRepository.Remove(id);
                 await _unitOfWork.CompleteAsync();
 
-                return new CategoryResponse(existingCategory);
+                return new ActionResponse<T>(existingEntity);
             }
             catch (Exception ex)
             {
                 // Do some logging stuff
-                return new CategoryResponse($"An error occurred when deleting the category: {ex.Message}");
+                return new ActionResponse<T>($"An error occurred when deleting the entity: {ex.Message}");
             }
         }
     }

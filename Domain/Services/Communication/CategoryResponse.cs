@@ -1,30 +1,32 @@
-﻿using Market.Api.Domain.Models;
-
-namespace Market.Api.Domain.Services.Communication
+﻿namespace Market.Api.Domain.Services.Communication
 {
-    public class CategoryResponse : BaseResponse
+    public class ActionResponse <T> where T: class
     {
-        public Category Category { get; private set; }
-
-        private CategoryResponse(bool success, string message, Category category) : base(success, message)
-        {
-            Category = category;
-        }
+        public T Entity { get; private set; }
+        public bool Success { get; protected set; }
+        public string Message { get; protected set; }
 
         /// <summary>
         /// Creates a success response. 
         /// </summary>
-        /// <param name="category">Saved category.</param>
-        /// <returns>Response.</returns>
-        public CategoryResponse(Category category) : this(true, string.Empty, category)
-        { }
+        /// <param name="message"></param>
+        /// <param name="entity"></param>
+        public ActionResponse(T entity)
+        {
+            Success = true;
+            Entity = entity;
+        }
 
         /// <summary>
-        /// Creates an error response.
+        /// Creates an error response
         /// </summary>
-        /// <param name="message">Error message.</param>
+        /// <param name="category">Saved category.</param>
         /// <returns>Response.</returns>
-        public CategoryResponse(string message) : this(false, message, null)
-        { }
+        public ActionResponse(string message)
+        {
+            Success = false;
+            Message = message;
+            Entity = null;
+        }
     }
 }

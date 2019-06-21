@@ -13,10 +13,10 @@ namespace Market.Api.Controllers
     [Route("/api/[controller]")]
     public class ProductsController : Controller
     {
-        private readonly IProductService _productService;
+        private readonly IService<Product> _productService;
         private readonly IMapper _mapper;
 
-        public ProductsController(IProductService productService, IMapper mapper)
+        public ProductsController(IService<Product> productService, IMapper mapper)
         {
             _productService = productService;
             _mapper = mapper;

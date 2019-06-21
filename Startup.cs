@@ -36,8 +36,8 @@ namespace Market.Api
             services.AddScoped<IRepository<Category>, Repository<Category>>();
             services.AddScoped<IRepository<Product>, ProductRepository>();
 
-            services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IService<Category>, BaseService<Category>>();
+            services.AddScoped<IService<Product>, BaseService<Product>>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
